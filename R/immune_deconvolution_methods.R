@@ -255,11 +255,7 @@ deconvolute_cibersort <- function(gene_expression_matrix,
   assert("CIBERSORT.R is provided", exists("cibersort_binary", envir = config_env))
   assert("CIBERSORT signature matrix is provided", exists("cibersort_mat", envir = config_env))
   source(get("cibersort_binary", envir = config_env))
-
-  tmp_mat <- tempfile()
-  write_tsv(as_tibble(gene_expression_matrix, rownames = "gene_symbol"), file = tmp_mat)
-
-  arguments <- dots_list(get("cibersort_mat", envir = config_env), tmp_mat,
+  arguments <- dots_list(read.table(get("cibersort_mat", envir = config_env),sep='\t',header = TRUE,row.names = 1), gene_expression_matrix,
     perm = 0,
     QN = quantile_norm, absolute = absolute, abs_method = abs_method, ..., .homonyms = "last"
   )
